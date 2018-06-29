@@ -56,7 +56,7 @@ EOF
 }
 
 resource "aws_lambda_function" "bot" {
-  filename      = "deployment.zip"
+  filename      = "release.zip"
   function_name = "TrendingSlackBot"
   description   = "Trending Slack Bot"
   role          = "${aws_iam_role.lambda.arn}"

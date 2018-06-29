@@ -44,7 +44,7 @@ func handler() {
 }
 
 func buildSlackMessage(projects []trending.Project) SlackMessage {
-	text := "*Top 10 github projects today*\n\n"
+	text := "*Top 10 repo today*\n\n"
 	for index, p := range projects {
 		if index >= 10 {
 			break
