@@ -23,8 +23,7 @@ Using [terraform](https://www.terraform.io/)
     schedule = "cron(0 8 ? * MON-FRI *)"
     ```
     * `aws_profile` is account in `~/.aws/credentials` 
-    * [schedule](https://docs.aws.amazon.com/lambda/latest/dg/tutorial-scheduled-events-schedule-expressions.html). Note: using UTC time
-        `cron(0 8 ? * MON-FRI *)` = `every working days at 3PM VNT`
+    * [schedule](https://docs.aws.amazon.com/lambda/latest/dg/tutorial-scheduled-events-schedule-expressions.html). Note: using UTC time `cron(0 8 ? * MON-FRI *)` = `every working days at 3PM VNT`
 * Apply
     ```
     terraform init
