@@ -1,0 +1,1 @@
+aws_profile = "money"slack_webhook = "https://hooks.slack.com/services/TOKEN"schedule = "cron(0 8 ? * MON-FRI *)"

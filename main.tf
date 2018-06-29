@@ -1,18 +1,12 @@
-variable "aws_profile" {
-  default = "money"
-}
+variable "aws_profile" {}
 
 variable "aws_region" {
   default = "ap-southeast-1"
 }
 
-variable "slack_webhook" {
-  default = "https://hooks.slack.com/services/TOKEN"
-}
+variable "slack_webhook" {}
 
-variable "schedule" {
-  default = "rate(1 minute)"
-}
+variable "schedule" {}
 
 provider "aws" {
   region  = "${var.aws_region}"
