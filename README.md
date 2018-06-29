@@ -1,6 +1,6 @@
 # trending-slack-bot
 
-Trigger an alarm to invoke a Lambda function written in Go that calls the Slack API to post a message to your channel
+Cron to post top 10 trending github repos today using lambda 
 
 ## Usage
 
