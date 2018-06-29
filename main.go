@@ -5,64 +5,40 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/aws/aws-lambda-go/lambda"
+	"github.com/dangkaka/go-trending"
 	"log"
 	"net/http"
 	"os"
 )
 
-type Request struct {
-	Records []struct {
-		SNS struct {
-			Type       string `json:"Type"`
-			Timestamp  string `json:"Timestamp"`
-			SNSMessage string `json:"Message"`
-		} `json:"Sns"`
-	} `json:"Records"`
-}
-
-type SNSMessage struct {
-	AlarmName        string `json:"AlarmName"`
-	AlarmDescription string `json:"AlarmDescription"`
-	NewStateValue    string `json:"NewStateValue"`
-	NewStateReason   string `json:"NewStateReason"`
-	OldStateValue    string `json:"OldStateValue"`
-}
-
 type SlackMessage struct {
-	Attachments []Attachment `json:"attachments"`
-}
-
-type Attachment struct {
-	Color  string            `json:"color"`
-	Fields []AttachmentField `json:"fields"`
-}
-
-type AttachmentField struct {
-	Title string `json:"title"`
-	Value string `json:"value"`
-	Short bool   `json:"short"`
+	Text string `json:"text"`
 }
 
 func handler() {
-	slackMessage := buildSlackMessage()
-	err := postToSlack(slackMessage)
+	trend := trending.NewTrending()
+
+	// Show projects of today
+	projects, err := trend.GetProjects(trending.TimeToday, "")
+	if err != nil {
+		log.Println("Get projects error: ", err)
+	}
+	slackMessage := buildSlackMessage(projects)
+	err = postToSlack(slackMessage)
 	if err != nil {
 		log.Println("PostToSlack error: ", err)
 	}
-	log.Println("Message has been sent")
 }
 
-func buildSlackMessage() SlackMessage {
-	return SlackMessage{
-		Attachments: []Attachment{
-			Attachment{
-				Color: "good",
-				Fields: []AttachmentField{
-					AttachmentField{"Test", "Test", true},
-				},
-			},
-		},
+func buildSlackMessage(projects []trending.Project) SlackMessage {
+	text := "*Top 10 github projects today* \n"
+	for index, p := range projects {
+		if index >= 10 {
+			break
+		}
+		text = text + fmt.Sprintf("%s - *%d* :star: today \n *%s* - *%d* :star: alltime \n _%s_", p.URL, p.TfStars, p.Language, p.Stars, p.Description) + "\n\n\n"
 	}
+	return SlackMessage{Text: text}
 }
 
 func postToSlack(message SlackMessage) error {
