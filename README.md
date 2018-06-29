@@ -1,6 +1,6 @@
 # trending-slack-bot
 
-Cron to post top 10 trending github repos today using lambda 
+Cron to post top 10 trending github repos using lambda 
 
 ## Usage
 
@@ -10,7 +10,7 @@ Cron to post top 10 trending github repos today using lambda
      go get github.com/aws/aws-lambda-go
      go get github.com/dangkaka/go-trending
     ```
-1. Build binary file and zip it in `deployment.zip`
+1. Build binary file and zip it in `release.zip`
     ```
     make release
     ```
@@ -24,6 +24,7 @@ Using [terraform](https://www.terraform.io/)
     ```
     * `aws_profile` is account in `~/.aws/credentials` 
     * [schedule](https://docs.aws.amazon.com/lambda/latest/dg/tutorial-scheduled-events-schedule-expressions.html). Note: using UTC time
+        `cron(0 8 ? * MON-FRI *)` = `every working days at 3PM VNT`
 * Apply
     ```
     terraform init
