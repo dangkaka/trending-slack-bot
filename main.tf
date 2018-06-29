@@ -1,14 +1,17 @@
 variable "aws_profile" {
   default = "money"
 }
+
 variable "aws_region" {
   default = "ap-southeast-1"
 }
+
 variable "slack_webhook" {
   default = "https://hooks.slack.com/services/TOKEN"
 }
+
 variable "schedule" {
-  default = "rate(2 minutes)"
+  default = "rate(1 minute)"
 }
 
 provider "aws" {
@@ -18,6 +21,7 @@ provider "aws" {
 
 resource "aws_iam_role" "lambda" {
   name = "TrendingSlackBotLambdaRole"
+
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -38,6 +42,7 @@ EOF
 resource "aws_iam_role_policy" "lambda" {
   name = "TrendingSlackBotAllowCloudwatch"
   role = "${aws_iam_role.lambda.id}"
+
   policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -72,20 +77,20 @@ resource "aws_lambda_function" "bot" {
 }
 
 resource "aws_cloudwatch_event_rule" "scheduled-rule" {
-  name = "TrendingSlackBotScheduledRule"
+  name                = "TrendingSlackBotScheduledRule"
   schedule_expression = "${var.schedule}"
 }
 
 resource "aws_cloudwatch_event_target" "scheduled_run_target" {
-  rule = "${aws_cloudwatch_event_rule.scheduled-rule.name}"
+  rule      = "${aws_cloudwatch_event_rule.scheduled-rule.name}"
   target_id = "TrendingSlackBotScheduledRule"
-  arn = "${aws_lambda_function.bot.arn}"
+  arn       = "${aws_lambda_function.bot.arn}"
 }
 
 resource "aws_lambda_permission" "allow-cloudwatch" {
-  statement_id = "AllowExecutionFromCloudWatch"
-  action = "lambda:InvokeFunction"
+  statement_id  = "AllowExecutionFromCloudWatch"
+  action        = "lambda:InvokeFunction"
   function_name = "${aws_lambda_function.bot.function_name}"
-  principal = "events.amazonaws.com"
-  source_arn = "${aws_cloudwatch_event_rule.scheduled-rule.arn}"
+  principal     = "events.amazonaws.com"
+  source_arn    = "${aws_cloudwatch_event_rule.scheduled-rule.arn}"
 }
