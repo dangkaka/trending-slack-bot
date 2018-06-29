@@ -1,6 +1,6 @@
 # trending-slack-bot
 
-Cron to post top 10 trending github repos using lambda 
+Using lambda cron to get top 10 github repos and post to slack
 
 ## Usage
 
